@@ -122,60 +122,76 @@ var functionList = {
     "Branches": showBranch
 };
 
-function categoryMatcher (categoryData, markup) {
-    return categoryFn(categoryData, markup);
+function categoryMatcher (categoryData, itemData, markup) {
+    return categoryFn(categoryData, itemData, markup);
 };
 
-function categoryFn (categoryData, markup) {
-    return functionList[categoryData].call(this, markup);
+function categoryFn (categoryData, itemData, markup) {
+    if (categoryData === 'Branches') {
+        return functionList[categoryData].call(this, markup);
+    } 
+    return functionList[categoryData].call(this, itemData,  markup);
 };
 
-function showSales (markup) {
-    for (item in testData.items) {
-        markup += "<li>" + testData.items[item].name + '<span'
-            + ' class="ui-li-count">' + "PHP " + testData.items[item].price + " * " +
-            testData.items[item].sold + " units " + " = " + "PHP "+ testData.items[item].price *
-            testData.items[item].sold + "</span></li>";
+function showSales (itemData, markup) {
+    for (item in itemData) {
+        markup += "<li>" + itemData[item].name + '<span'
+            + ' class="ui-li-count">' + "PHP " + itemData[item].price + " * " +
+            itemData[item].sold + " units " + " = " + "PHP "+ itemData[item].price *
+            itemData[item].sold + "</span></li>";
     }
     return markup;
 };
 
-function showInventory (markup) {
+function showInventory (itemData, markup) {
     for (item in testData.items) {
         markup += "<li>" + '<div'
             + ' class="ui-grid-a"> <span class = "ui-block-a">' +
-            testData.items[item].name + '</span><span class = "ui-block-b" style="text-align:right">'
+            itemData[item].name + '</span><span class = "ui-block-b" style="text-align:right">'
             + "Units left: " + "<span class = 'ui-li-count'>" +
-            testData.items[item].inventory + "</span> "+"</span>" + "</div></li>";
+            itemData[item].inventory + "</span> "+"</span>" + "</div></li>";
     }
     return markup;
 };
 
 function showBranch (markup) {
     for (branch in testData.branches) {
-        markup += "<li>" + testData.branches[branch].name + "</li>";
+        markup += "<li>" + '<a href="#branch-items?branch=' +
+        testData.branches[branch].name + '">' +
+            testData.branches[branch].name + "</a>" +"</li>";
     }
     return markup;
 };
 
-function showCategory( urlObj, options, category )
+function showCategory( urlObj, options, category, itemData )
 {
-    var categoryName = urlObj.hash.replace( /.*category=/, "" ),
+    var categoryName = urlObj.hash.replace( /.*=/, "" ),
 	    pageSelector = urlObj.hash.replace( /\?.*$/, "" );
 
     if ( categoryName ) {
 	    var $page = $( pageSelector ),
 		    $header = $page.children( ":jqmData(role=header)" ),
 		    $content = $page.children( ":jqmData(role=content)" ),
-            markup = "<ul data-role='listview' data-inset='true'>",
-            items = testData.items;
+            markup = "<ul data-role='listview' data-inset='true'>";
 
-        markup += categoryMatcher(category, markup);
+        // clicked on sales, inventory, or branches
+        if (category in functionList) {
+            markup += categoryMatcher(category,itemData, markup);
+            markup += "</ul>";
 
-        markup += "</ul>";
-	    $header.find( "h1" ).html( categoryName );
+        } else { // <--- must fix this and refactor to independent function
+            markup = "<h2>Select a Category Below:</h2>" +
+                "<ul data-role='listview' data-inset='true'>" +
+                "<li><a href='#category-items?branch=" + categoryName +
+                "?category=Sales'>Sales</a></li>"+
+                "<li><a href='#category-items?branch=" + categoryName +
+                "?category=Inventory'>Inventory</a></li>" +
+                "</ul>";
+        }
+        
+        $header.find( "h1" ).html( categoryName );
 	    $content.html( markup );
-	    $page.page();
+        $page.page();
 	    $content.find( ":jqmData(role=listview)" ).listview();
 	    options.dataUrl = urlObj.href;
 	    $.mobile.changePage( $page, options );
@@ -186,12 +202,29 @@ $(document).bind( "pagebeforechange", function( e, data ) {
 
     if ( typeof data.toPage === "string" ) {
 	    var u = $.mobile.path.parseUrl( data.toPage ),
-            backP = /.*category=/,
-            category = u.hash.replace( /.*category=/, "" );
+            backP = /.*=/,
+            branchP = /branch?/,
+            categoryP = /category?/;
+
+        if ( u.hash.search( categoryP ) !== -1 ){
+            var category = u.hash.match( /^.*category=(\w+)$/)[1];
+        } else {
+            var category = null;
+        }
         
         if ( u.hash.search( backP ) !== -1 ) {
-            showCategory(u, data.options, category);
-            e.preventDefault();
+            
+            if (u.hash.search( branchP ) !== -1) { // clicked on a branch
+
+                var branchName = u.hash.match( /^.*branch=(\w+)[?]*/ )[1]; // retrieving branch name
+                showCategory(u, data.options, category, testData.branches[branchName.toLowerCase()].items);
+                e.preventDefault();
+                
+            } else {
+                showCategory(u, data.options, category,
+                             testData.items);
+                e.preventDefault();
+            }
         }
     }
 });
