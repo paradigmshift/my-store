@@ -1,5 +1,6 @@
-Basic views of Sales, Inventory, and Branches work.
+Minor refactoring
+README.md (really should be DOCS.md)
 
 TO DO:
-[ ] Refactoring of the view flow/mechanism
+[x] Refactoring of the view flow/mechanism
 [ ] Add reports view
