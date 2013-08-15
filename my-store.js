@@ -122,15 +122,16 @@ var functionList = {
     "Branches": showBranch
 };
 
-function categoryMatcher (categoryData, itemData, markup) {
-    return categoryFn(categoryData, itemData, markup);
+function categoryMatcher (categoryData, itemData, markup, fnList) {
+    var fn = fnList[categoryData];
+    return categoryFn(fn, categoryData, itemData, markup);
 };
 
-function categoryFn (categoryData, itemData, markup) {
+function categoryFn (fn, categoryData, itemData, markup) {
     if (categoryData === 'Branches') {
-        return functionList[categoryData].call(this, markup);
+        return fn.call(this, markup);
     } 
-    return functionList[categoryData].call(this, itemData,  markup);
+    return fn.call(this, itemData,  markup);
 };
 
 function showSales (itemData, markup) {
@@ -163,6 +164,16 @@ function showBranch (markup) {
     return markup;
 };
 
+function branchMenu (branchName) {
+    return "<h2>Select a Category Below:</h2>" +
+                "<ul data-role='listview' data-inset='true'>" +
+                "<li><a href='#category-items?branch=" + branchName +
+                "?category=Sales'>Sales</a></li>"+
+                "<li><a href='#category-items?branch=" + branchName +
+                "?category=Inventory'>Inventory</a></li>" +
+                "</ul>";
+}
+
 function showCategory( urlObj, options, category, itemData )
 {
     var categoryName = urlObj.hash.replace( /.*=/, "" ),
@@ -174,19 +185,14 @@ function showCategory( urlObj, options, category, itemData )
 		    $content = $page.children( ":jqmData(role=content)" ),
             markup = "<ul data-role='listview' data-inset='true'>";
 
-        // clicked on sales, inventory, or branches
+        // clicked on sales, inventory, or branches (top level or
+        // branch item view)
         if (category in functionList) {
-            markup += categoryMatcher(category,itemData, markup);
+            markup += categoryMatcher(category,itemData, markup, functionList);
             markup += "</ul>";
 
-        } else { // <--- must fix this and refactor to independent function
-            markup = "<h2>Select a Category Below:</h2>" +
-                "<ul data-role='listview' data-inset='true'>" +
-                "<li><a href='#category-items?branch=" + categoryName +
-                "?category=Sales'>Sales</a></li>"+
-                "<li><a href='#category-items?branch=" + categoryName +
-                "?category=Inventory'>Inventory</a></li>" +
-                "</ul>";
+        } else { 
+            markup = branchMenu (categoryName);
         }
         
         $header.find( "h1" ).html( categoryName );
@@ -206,26 +212,28 @@ $(document).bind( "pagebeforechange", function( e, data ) {
             branchP = /branch?/,
             categoryP = /category?/;
 
-        if ( u.hash.search( categoryP ) !== -1 ){
-            var category = u.hash.match( /^.*category=(\w+)$/)[1];
-        } else {
-            var category = null;
-        }
+        var category = u.hash.search(categoryP) !== -1 ? u.hash.match(
+                /^.*category=(\w+)$/)[1] : null;
         
         if ( u.hash.search( backP ) !== -1 ) {
-            
-            if (u.hash.search( branchP ) !== -1) { // clicked on a branch
+            // clicked on a branch
+            if (u.hash.search( branchP ) !== -1) {
 
-                var branchName = u.hash.match( /^.*branch=(\w+)[?]*/ )[1]; // retrieving branch name
+                var branchName = u.hash.match( /^.*branch=(\w+)[?]*/ )[1];
                 showCategory(u, data.options, category, testData.branches[branchName.toLowerCase()].items);
                 e.preventDefault();
-                
+            // top level menu
             } else {
                 showCategory(u, data.options, category,
-                             testData.items);
+                             testData.items); // <--- create separate
+                // variable for testData.items                
                 e.preventDefault();
             }
         }
     }
 });
+
+
+
+
 
