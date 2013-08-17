@@ -6,6 +6,8 @@
 <title>myStore Sample</title>
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
 	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="jqm.autoComplete-1.5.2-min.js"></script>    
 	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
     <script src="my-store.js"></script>
 
@@ -33,6 +35,21 @@
   <div data-role="header"><h1></h1></div>
   <div data-role="content"></div>
 </div>
+
+<div id="modify-items" data-role="page" data-add-back-btn="true">
+  <div data-role="header"><h1></h1></div>
+  <div data-role="content">
+    <div data-role="fieldcontain"> 
+      <label for="searchField">Enter Item </label> 
+      <input type="text" id="searchField" placeholder="Spaghetti, Olive oil, etc." /> 
+      <ul data-role="listview" data-inset="true" id="suggestions"></ul> 
+    </div>
+    <form method="get" action="">
+          <div data-role="fieldcontain" id="itemList"></div>
+          <button class="ui-btn-hidden" value="submit-value"
+          name="submit" type="submit"> Submit </button>
+    </form>
+  </div>
 
 </body>
 </html>

@@ -61,8 +61,8 @@ var testData = {
                 spaghetti: {
                     "name": "Spaghetti",
                     "price": 20,
-                    "sold": 102,
-                    "inventory": 80
+                    "Sold": 102,
+                    "Inventory": 80
                 },
                 tomatoes: {
                     "name": "Tomatoes",
@@ -116,23 +116,34 @@ var testData = {
     }
 };
 
-var functionList = {
+var showFunctionList = {
     "Sales": showSales,
     "Inventory": showInventory,
     "Branches": showBranch
 };
 
-function categoryMatcher (categoryData, itemData, markup, fnList) {
-    var fn = fnList[categoryData];
-    return categoryFn(fn, categoryData, itemData, markup);
+var addFunctionList = {
+    "addSale": addSale,
+    "addInventory": addInventory
 };
 
-function categoryFn (fn, categoryData, itemData, markup) {
+var itemList = []; // list of items for autocomplete feature
+
+function categoryMatcher (categoryData, itemData, markup, fnList, branchName) {
+    var fn = fnList[categoryData];
+    return branchName ? categoryFn(fn, categoryData, itemData, markup,
+                                   branchName) : categoryFn(fn, categoryData, itemData, markup);
+};
+
+function categoryFn (fn, categoryData, itemData, markup, branchName) {
     if (categoryData === 'Branches') {
         return fn.call(this, markup);
     } 
-    return fn.call(this, itemData,  markup);
+    return branchName ? fn.call(this, itemData,  markup, branchName) :
+        fn.call(this, itemData, markup);
 };
+
+
 
 function showSales (itemData, markup) {
     for (item in itemData) {
@@ -166,15 +177,23 @@ function showBranch (markup) {
 
 function branchMenu (branchName) {
     return "<h2>Select a Category Below:</h2>" +
-                "<ul data-role='listview' data-inset='true'>" +
-                "<li><a href='#category-items?branch=" + branchName +
-                "?category=Sales'>Sales</a></li>"+
-                "<li><a href='#category-items?branch=" + branchName +
-                "?category=Inventory'>Inventory</a></li>" +
-                "</ul>";
+        "<ul data-role='listview' data-inset='true'>" +
+        // View sales and inventory
+        "<li><a href='#category-items?branch=" + branchName +
+        "?category=Sales'>View Sales</a></li>"+
+        "<li><a href='#category-items?branch=" + branchName +
+        "?category=Inventory'>View Inventory</a></li>" +
+        // Add sales and inventory
+        "<li><a href='#modify-items?branch=" + branchName +
+        "?category=addSale'>Enter a Sale</a></li>" + "<li><a"
+        + " href='#modify-items?branch=" + branchName +
+        "?category=addInventory'>Enter Inventory</a></li>"
+        +
+    "</ul>";
 }
 
-function showCategory( urlObj, options, category, itemData )
+function showCategory( urlObj, options, category, itemData,
+                       fnList, branchName )
 {
     var categoryName = urlObj.hash.replace( /.*=/, "" ),
 	    pageSelector = urlObj.hash.replace( /\?.*$/, "" );
@@ -187,8 +206,10 @@ function showCategory( urlObj, options, category, itemData )
 
         // clicked on sales, inventory, or branches (top level or
         // branch item view)
-        if (category in functionList) {
-            markup += categoryMatcher(category,itemData, markup, functionList);
+
+        if (category in fnList) {
+            markup += categoryMatcher(category, itemData, markup,
+                                      fnList, branchName);
             markup += "</ul>";
 
         } else { 
@@ -204,8 +225,70 @@ function showCategory( urlObj, options, category, itemData )
     }
 }
 
-$(document).bind( "pagebeforechange", function( e, data ) {
+function addSale (itemData, markup, branchName) { // <--- fill in
+    for (item in itemData) {
+        itemList.push(itemData[item].name);
+    }
+    return markup;
+};
 
+function addInventory () { // <--- fill in
+    
+};
+
+function saleInventoryForm (txt) {
+    var markup = "<div data-role='fieldcontain'>" + "<label"
+            + " for='item'>Item: </label>"+"<input"
+            + " type='text' name='item' value='" + txt.text() + "'/> "
+            + "<label for ='quantity'>Qty: </label>" + "<input"
+            + " type='number' name='quantity' min='1'/>" 
+            + "</div>";
+    return markup;
+}
+
+function addRemoveList( urlObj, options, category, itemData,
+                       fnList, branchName )
+{
+    $("#searchField").autocomplete({
+        icon: 'arrow-r', // option to specify icon
+        target: $('#suggestions'), // the listview to receive results
+        source: itemList, // URL return JSON data
+        link: 'target.html?term=',
+        // link to be attached to each result
+        minLength: 1, // minimum length of search string
+        transition: 'fade',// page transition, default is fade
+        matchFromStart: true, // search from start, or anywhere in the string
+        loadingHtml : '<li data-icon="none"><a href="#">Searching...</a></li>', // HTML to display when searching remotely
+        klass: 'tinted',
+        callback: function(e) {
+            var $item = $(e.currentTarget);
+            $('#itemList').append(saleInventoryForm($item));
+            $('#seaarchField').autocomplete("clear");
+        }
+    });
+    
+    var categoryName = urlObj.hash.replace( /.*=/, "" ),
+	    pageSelector = urlObj.hash.replace( /\?.*$/, "" );
+
+    if ( categoryName ) {
+	    var $page = $( pageSelector ),
+		    $header = $page.children( ":jqmData(role=header)" ),
+		    $content = $page.children( ":jqmData(role=content)" ),
+            markup='';
+
+        categoryMatcher(category, itemData, markup, fnList,
+                        branchName);
+        
+        $header.find( "h1" ).html( categoryName );
+        $page.page();
+	    $content.find( ":jqmData(role=listview)" ).listview();
+	    options.dataUrl = urlObj.href;
+	    $.mobile.changePage( $page, options );
+    }
+}
+
+$(document).bind( "pagebeforechange", function( e, data ) {
+    
     if ( typeof data.toPage === "string" ) {
 	    var u = $.mobile.path.parseUrl( data.toPage ),
             backP = /.*=/,
@@ -213,27 +296,35 @@ $(document).bind( "pagebeforechange", function( e, data ) {
             categoryP = /category?/;
 
         var category = u.hash.search(categoryP) !== -1 ? u.hash.match(
-                /^.*category=(\w+)$/)[1] : null;
+                /^.*category=(\w+)$/)[1] : null,
+            fnList = (category in addFunctionList) ? addFunctionList
+                : showFunctionList;
         
         if ( u.hash.search( backP ) !== -1 ) {
             // clicked on a branch
             if (u.hash.search( branchP ) !== -1) {
 
-                var branchName = u.hash.match( /^.*branch=(\w+)[?]*/ )[1];
-                showCategory(u, data.options, category, testData.branches[branchName.toLowerCase()].items);
+                var branchName = u.hash.match( /^.*branch=(\w+)[?]*/
+                                             )[1].toLowerCase();
+
+                fnList === addFunctionList ? addRemoveList(u,
+                                                           data.options,
+                                                          category,
+                                                           testData.branches[branchName].items,
+                                                           fnList,
+                                                           branchName) :
+                    showCategory(u, data.options, category,
+                                 testData.branches[branchName].items, fnList,
+                                 branchName);
+
                 e.preventDefault();
             // top level menu
             } else {
                 showCategory(u, data.options, category,
-                             testData.items); // <--- create separate
+                             testData.items, fnList,  null); // <--- create separate
                 // variable for testData.items                
                 e.preventDefault();
             }
         }
     }
 });
-
-
-
-
-

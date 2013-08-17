@@ -1,6 +1,5 @@
-Minor refactoring
-README.md (really should be DOCS.md)
+Add Sale feature
+Autocomplete for Add Sale and Add Inventory
 
 TO DO:
-[x] Refactoring of the view flow/mechanism
 [ ] Add reports view
