@@ -206,7 +206,6 @@ function showCategory( urlObj, options, category, itemData,
 
         // clicked on sales, inventory, or branches (top level or
         // branch item view)
-
         if (category in fnList) {
             markup += categoryMatcher(category, itemData, markup,
                                       fnList, branchName);
@@ -225,7 +224,7 @@ function showCategory( urlObj, options, category, itemData,
     }
 }
 
-function addSale (itemData, markup, branchName) { // <--- fill in
+function addSale (itemData, markup, branchName) {
     for (item in itemData) {
         itemList.push(itemData[item].name);
     }
@@ -236,14 +235,25 @@ function addInventory () { // <--- fill in
     
 };
 
-function saleInventoryForm (txt) {
+function saleInventoryForm (name, price) {
     var markup = "<div data-role='fieldcontain'>" + "<label"
             + " for='item'>Item: </label>"+"<input"
-            + " type='text' name='item' value='" + txt.text() + "'/> "
+            + " type='text' name='item' value='" + name + "'/> "
+            + "<label for ='price'>Price: </label>" + "<input"
+            + " type='number' name='price' value='" + price + "'/> "
             + "<label for ='quantity'>Qty: </label>" + "<input"
             + " type='number' name='quantity' min='1'/>" 
             + "</div>";
     return markup;
+}
+
+// retrieves the item with the matching key, value element
+function reverseSearch (value, key, itemData) {
+    for (i in itemData) {
+        if (itemData[i][key] === value) {
+            return i;
+        }
+    };
 }
 
 function addRemoveList( urlObj, options, category, itemData,
@@ -261,8 +271,9 @@ function addRemoveList( urlObj, options, category, itemData,
         loadingHtml : '<li data-icon="none"><a href="#">Searching...</a></li>', // HTML to display when searching remotely
         klass: 'tinted',
         callback: function(e) {
-            var $item = $(e.currentTarget);
-            $('#itemList').append(saleInventoryForm($item));
+            var $item = $(e.currentTarget),
+                price = itemData[reverseSearch($item.text(), "name", itemData)].price;
+            $('#itemList').append(saleInventoryForm($item.text(), price));
             $('#seaarchField').autocomplete("clear");
         }
     });
@@ -278,7 +289,11 @@ function addRemoveList( urlObj, options, category, itemData,
 
         categoryMatcher(category, itemData, markup, fnList,
                         branchName);
-        
+
+        if (category === "addSale") { // <--- add customer name search
+            $('#customerName').html("<p>Customer Name</p>");
+        }
+
         $header.find( "h1" ).html( categoryName );
         $page.page();
 	    $content.find( ":jqmData(role=listview)" ).listview();
