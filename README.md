@@ -9,6 +9,7 @@ UI for the myStore program.
 
 ### Dependencies:
 - JQ Mobile
+- [autoComplete.js](https://github.com/commadelimited/autoComplete.js)
 
 #### *function* categoryMatcher <- category(string), items(object literal), markup(string), functionList(hash)
 Calls appropriate function according to `category`. Matches `category` with `functionList` to determine appropriate function.

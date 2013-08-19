@@ -1,130 +1,126 @@
-var testData = {
-    items: {
-        spaghetti: {
-            "name": "Spaghetti",
-            "price": 20,
-            "sold": 154,
-            "inventory": 360
-        },
-        tomatoes: {
-            "name": "Tomatoes",
-            "price": 30,
-            "sold": 252,
-            "inventory": 343
-        },
-        oliveOil: {
-            "name": "Olive Oil",
-            "price": 34.5,
-            "sold": 230,
-            "inventory": 39
-        },
-        tomatoPaste: {
-            "name": "Tomato Paste",
-            "price":45.4,
-            "sold": 103,
-            "inventory": 32
-        }
-    },
-    branches: {
-        cebu: {
-            "name": "Cebu",
-            items: {
-                spaghetti: {
-                    "name": "Spaghetti",
-                    "price": 20,
-                    "sold": 88,
-                    "inventory": 123
-                },
-                tomatoes: {
-                    "name": "Tomatoes",
-                    "price": 30,
-                    "sold": 250,
-                    "inventory": 104
-                },
-                oliveOil: {
-                    "name": "Olive Oil",
-                    "price": 34.5,
-                    "sold": 154,
-                    "inventory": 20
-                },
-                tomatoPaste: {
-                    "name": "Tomato Paste",
-                    "price":45.4,
-                    "sold": 43,
-                    "inventory": 3
-                }
-            }
-        },
-        manila: {
-            "name": "Manila",
-            items: {
-                spaghetti: {
-                    "name": "Spaghetti",
-                    "price": 20,
-                    "Sold": 102,
-                    "Inventory": 80
-                },
-                tomatoes: {
-                    "name": "Tomatoes",
-                    "price": 30,
-                    "sold": 250,
-                    "inventory": 104
-                },
-                oliveOil: {
-                    "name": "Olive Oil",
-                    "price": 34.5,
-                    "sold": 25,
-                    "inventory": 10
-                },
-                tomatoPaste: {
-                    "name": "Tomato Paste",
-                    "price":45.4,
-                    "sold": 36,
-                    "inventory": 5
-                }
-            }
-        },
-        boracay: {
-            "name": "Boracay",
-            items: {
-                spaghetti: {
-                    "name": "Spaghetti",
-                    "price": 20,
-                    "sold": 45,
-                    "inventory": 49
-                },
-                tomatoes: {
-                    "name": "Tomatoes",
-                    "price": 30,
-                    "sold": 34,
-                    "inventory": 87
-                },
-                oliveOil: {
-                    "name": "Olive Oil",
-                    "price": 34.5,
-                    "sold": 5,
-                    "inventory": 15
-                },
-                tomatoPaste: {
-                    "name": "Tomato Paste",
-                    "price":45.4,
-                    "sold": 23,
-                    "inventory": 10
-                }
-            }
-        }
-    }
-};
+// var testData = {
+//     items: {
+//         spaghetti: {
+//             "name": "Spaghetti",
+//             "price": 20,
+//             "sold": 154,
+//             "inventory": 360
+//         },
+//         tomatoes: {
+//             "name": "Tomatoes",
+//             "price": 30,
+//             "sold": 252,
+//             "inventory": 343
+//         },
+//         oliveOil: {
+//             "name": "Olive Oil",
+//             "price": 34.5,
+//             "sold": 230,
+//             "inventory": 39
+//         },
+//         tomatoPaste: {
+//             "name": "Tomato Paste",
+//             "price":45.4,
+//             "sold": 103,
+//             "inventory": 32
+//         }
+//     },
+//     branches: {
+//         cebu: {
+//             "name": "Cebu",
+//             items: {
+//                 spaghetti: {
+//                     "name": "Spaghetti",
+//                     "price": 20,
+//                     "sold": 88,
+//                     "inventory": 123
+//                 },
+//                 tomatoes: {
+//                     "name": "Tomatoes",
+//                     "price": 30,
+//                     "sold": 250,
+//                     "inventory": 104
+//                 },
+//                 oliveOil: {
+//                     "name": "Olive Oil",
+//                     "price": 34.5,
+//                     "sold": 154,
+//                     "inventory": 20
+//                 },
+//                 tomatoPaste: {
+//                     "name": "Tomato Paste",
+//                     "price":45.4,
+//                     "sold": 43,
+//                     "inventory": 3
+//                 }
+//             }
+//         },
+//         manila: {
+//             "name": "Manila",
+//             items: {
+//                 spaghetti: {
+//                     "name": "Spaghetti",
+//                     "price": 20,
+//                     "Sold": 102,
+//                     "Inventory": 80
+//                 },
+//                 tomatoes: {
+//                     "name": "Tomatoes",
+//                     "price": 30,
+//                     "sold": 250,
+//                     "inventory": 104
+//                 },
+//                 oliveOil: {
+//                     "name": "Olive Oil",
+//                     "price": 34.5,
+//                     "sold": 25,
+//                     "inventory": 10
+//                 },
+//                 tomatoPaste: {
+//                     "name": "Tomato Paste",
+//                     "price":45.4,
+//                     "sold": 36,
+//                     "inventory": 5
+//                 }
+//             }
+//         },
+//         boracay: {
+//             "name": "Boracay",
+//             items: {
+//                 spaghetti: {
+//                     "name": "Spaghetti",
+//                     "price": 20,
+//                     "sold": 45,
+//                     "inventory": 49
+//                 },
+//                 tomatoes: {
+//                     "name": "Tomatoes",
+//                     "price": 30,
+//                     "sold": 34,
+//                     "inventory": 87
+//                 },
+//                 oliveOil: {
+//                     "name": "Olive Oil",
+//                     "price": 34.5,
+//                     "sold": 5,
+//                     "inventory": 15
+//                 },
+//                 tomatoPaste: {
+//                     "name": "Tomato Paste",
+//                     "price":45.4,
+//                     "sold": 23,
+//                     "inventory": 10
+//                 }
+//             }
+//         }
+//     }
+// };
+
 
 var showFunctionList = {
     "Sales": showSales,
     "Inventory": showInventory,
     "Branches": showBranch
-};
-
-var addFunctionList = {
-    "addSale": addSale,
-    "addInventory": addInventory
 };
 
 var itemList = []; // list of items for autocomplete feature
@@ -147,10 +143,13 @@ function categoryFn (fn, categoryData, itemData, markup, branchName) {
 
 function showSales (itemData, markup) {
     for (item in itemData) {
-        markup += "<li>" + itemData[item].name + '<span'
-            + ' class="ui-li-count">' + "PHP " + itemData[item].price + " * " +
-            itemData[item].sold + " units " + " = " + "PHP "+ itemData[item].price *
-            itemData[item].sold + "</span></li>";
+        markup += "<li>" + '<div class="ui-grid-b">'
+            + "<span class='ui-block-a'>" + itemData[item].name +
+            "</span>"
+            + "<span class='ui-block-b' style='text-align:center'>" + "Units Sold: " + itemData[item].sold +
+            "</span>" + "<span class='ui-block-c' style='text-align:right'>" + "Total Sales: " +
+            "<span class='ui-li-count'>" +itemData[item].price *
+            itemData[item].sold + "</span></span></div></li>";
     }
     return markup;
 };
@@ -184,9 +183,9 @@ function branchMenu (branchName) {
         "<li><a href='#category-items?branch=" + branchName +
         "?category=Inventory'>View Inventory</a></li>" +
         // Add sales and inventory
-        "<li><a href='#modify-items?branch=" + branchName +
+        "<li><a href='#add-sale?branch=" + branchName +
         "?category=addSale'>Enter a Sale</a></li>" + "<li><a"
-        + " href='#modify-items?branch=" + branchName +
+        + " href='#add-inventory?branch=" + branchName +
         "?category=addInventory'>Enter Inventory</a></li>"
         +
     "</ul>";
@@ -224,18 +223,20 @@ function showCategory( urlObj, options, category, itemData,
     }
 }
 
-function addSale (itemData, markup, branchName) {
+var addFunctionList = {
+    "addSale": populateItemList,
+    "addInventory": populateItemList
+};
+
+function populateItemList (itemData, markup, branchName) {
+    itemList.length = 0;
     for (item in itemData) {
         itemList.push(itemData[item].name);
     }
     return markup;
 };
 
-function addInventory () { // <--- fill in
-    
-};
-
-function saleInventoryForm (name, price) {
+function saleForm (name, price) {
     var markup = "<div data-role='fieldcontain'>" + "<label"
             + " for='item'>Item: </label>"+"<input"
             + " type='text' name='item' value='" + name + "'/> "
@@ -243,6 +244,16 @@ function saleInventoryForm (name, price) {
             + " type='number' name='price' value='" + price + "'/> "
             + "<label for ='quantity'>Qty: </label>" + "<input"
             + " type='number' name='quantity' min='1'/>" 
+            + "</div>";
+    return markup;
+}
+
+function inventoryForm (name) {
+    var markup = "<div data-role='fieldcontain'>" + "<label"
+            + " for='item'>Item: </label>" + "<input"
+            + " type='text' name='item' value='" + name + "'/> "
+            + "<label for ='quantity'>Qty: </label>" + "<input"
+            + " type='number' name='quantity' min='1'/>"
             + "</div>";
     return markup;
 }
@@ -256,27 +267,48 @@ function reverseSearch (value, key, itemData) {
     };
 }
 
+function acSearch(selector, ...theArgs) { // wrapper for autocomplete method
+    var codeString = "jQuery('" + selector + "').autocomplete({";
+    theArgs.map(function (arg) {
+        codeString += arg;
+    });
+    codeString += "})";
+    return codeString;
+}
+
+function addSaleAc () {
+    return  acSearch("#saleSearchField",
+                     "icon:'plus',",
+                     "target:$('#saleSuggestions'),",
+                     "source:itemList,",
+                     "minLength:1,",
+                     "callback: function(e) {var $item ="
+                     + " $(e.currentTarget), price ="
+                     + " itemData[reverseSearch($item.text(), 'name',"
+                     + " itemData)].price;"
+                     + " $('#saleItemList').append(saleForm($item.text(),"
+                     + " price));"
+                     + " $('#saleSearchField').autocomplete('clear');}");
+}
+
+function addInventoryAc () {
+    return acSearch("#inventorySearchField",
+                   "icon:'plus',",
+                   "target:$('#inventorySuggestions'),",
+                   "source:itemList,",
+                   "minLength:1,",
+                   "callback: function(e) {var $item="
+                    + " $(e.currentTarget); "
+                    + " $('#inventoryItemList').append(inventoryForm($item.text()));"
+                    + " $('#inventorySearchField').autocomplete('clear');}");
+}
+
 function addRemoveList( urlObj, options, category, itemData,
                        fnList, branchName )
 {
-    $("#searchField").autocomplete({
-        icon: 'arrow-r', // option to specify icon
-        target: $('#suggestions'), // the listview to receive results
-        source: itemList, // URL return JSON data
-        link: 'target.html?term=',
-        // link to be attached to each result
-        minLength: 1, // minimum length of search string
-        transition: 'fade',// page transition, default is fade
-        matchFromStart: true, // search from start, or anywhere in the string
-        loadingHtml : '<li data-icon="none"><a href="#">Searching...</a></li>', // HTML to display when searching remotely
-        klass: 'tinted',
-        callback: function(e) {
-            var $item = $(e.currentTarget),
-                price = itemData[reverseSearch($item.text(), "name", itemData)].price;
-            $('#itemList').append(saleInventoryForm($item.text(), price));
-            $('#seaarchField').autocomplete("clear");
-        }
-    });
+    // load appropriate parameters for autocomplete
+    category === 'addSale' ? eval(addSaleAc.call(this)) :
+        eval(addInventoryAc.call(this));
     
     var categoryName = urlObj.hash.replace( /.*=/, "" ),
 	    pageSelector = urlObj.hash.replace( /\?.*$/, "" );
@@ -290,9 +322,13 @@ function addRemoveList( urlObj, options, category, itemData,
         categoryMatcher(category, itemData, markup, fnList,
                         branchName);
 
-        if (category === "addSale") { // <--- add customer name search
-            $('#customerName').html("<p>Customer Name</p>");
-        }
+        console.log(itemList);
+        console.log(category);
+        console.log(eval(addInventoryAc.call(this)));
+
+        // if (category === "addSale") { // <--- add customer name search
+        //     $('#customerName').html("<p>Customer Name</p>");
+        // }
 
         $header.find( "h1" ).html( categoryName );
         $page.page();
@@ -303,6 +339,8 @@ function addRemoveList( urlObj, options, category, itemData,
 }
 
 $(document).bind( "pagebeforechange", function( e, data ) {
+
+    var testData = JSON.stringify($.getScript("http://localhost:3000/ajaxtest.js"));
     
     if ( typeof data.toPage === "string" ) {
 	    var u = $.mobile.path.parseUrl( data.toPage ),
@@ -314,6 +352,8 @@ $(document).bind( "pagebeforechange", function( e, data ) {
                 /^.*category=(\w+)$/)[1] : null,
             fnList = (category in addFunctionList) ? addFunctionList
                 : showFunctionList;
+
+        console.log(testData);
         
         if ( u.hash.search( backP ) !== -1 ) {
             // clicked on a branch
@@ -343,3 +383,17 @@ $(document).bind( "pagebeforechange", function( e, data ) {
         }
     }
 });
+
+
+var json = (function () {
+    $.ajax({
+        'async':false,
+        'global':false,
+        'url': "http://localhost:4000",
+        'dataType': "json",
+        'success': function (data) {
+            my_json = data;
+        }
+    });
+    return json;
+})();
