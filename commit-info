@@ -1,14 +1,5 @@
-Inventory view added.
-
-Markup for Sales view changed.
-
-Add inventory and add sales views split into separate 
-pages to avoid js injection pollution.
-
-Autocomplete method wrapped to shorten code in the calling
-functions.
+Data now loaded via AJAX (jQuery .getJSON method)
 
 TO DO:
-[X] Add inventory view
-[ ] JSON remote loading
+[X] JSON remote loading
 [ ] Add reports view

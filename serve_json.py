@@ -1,10 +1,15 @@
 from bottle import *
 
-with open("/Users/mozartreina/dev/js/my-store/ajaxtest.js", "r") as f:
-    data = f.read()
-    
-@get('/')
-def serve_json():
-    return data
+with open('ajaxtest.js', 'r') as f:
+    test_data = f.read()
 
-run(host='localhost', port=4000)
+def jsonp(request, dictionary):
+    if (request.query.callback):
+        return "%s(%s)" % (request.query.callback, dictionary)
+    return "%s" % dictionary
+
+@get('/')
+def something():
+    return jsonp(request, test_data)
+
+run(host='localhost', port=5000)
