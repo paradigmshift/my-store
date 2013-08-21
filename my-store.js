@@ -1,7 +1,7 @@
-var testData;
+var clientData;
 
 $.getJSON("http://localhost:5000?callback=?", function(data) {
-    testData = data; });
+    clientData = data; });
 
 var showFunctionList = {
     "Sales": showSales,
@@ -41,7 +41,7 @@ function showSales (itemData, markup) {
 };
 
 function showInventory (itemData, markup) {
-    for (item in testData.items) {
+    for (item in clientData.items) {
         markup += "<li>" + '<div'
             + ' class="ui-grid-a"> <span class = "ui-block-a">' +
             itemData[item].name + '</span><span class = "ui-block-b" style="text-align:right">'
@@ -52,10 +52,10 @@ function showInventory (itemData, markup) {
 };
 
 function showBranch (markup) {
-    for (branch in testData.branches) {
+    for (branch in clientData.branches) {
         markup += "<li>" + '<a href="#branch-items?branch=' +
-        testData.branches[branch].name + '">' +
-            testData.branches[branch].name + "</a>" +"</li>";
+        clientData.branches[branch].name + '">' +
+            clientData.branches[branch].name + "</a>" +"</li>";
     }
     return markup;
 };
@@ -155,9 +155,11 @@ function reverseSearch (value, key, itemData) {
 
 function acSearch(selector, ...theArgs) { // wrapper for autocomplete method
     var codeString = "jQuery('" + selector + "').autocomplete({";
+    
     theArgs.map(function (arg) {
         codeString += arg;
     });
+    
     codeString += "})";
     return codeString;
 }
@@ -208,10 +210,6 @@ function addRemoveList( urlObj, options, category, itemData,
         categoryMatcher(category, itemData, markup, fnList,
                         branchName);
 
-        console.log(itemList);
-        console.log(category);
-        console.log(eval(addInventoryAc.call(this)));
-
         // if (category === "addSale") { // <--- add customer name search
         //     $('#customerName').html("<p>Customer Name</p>");
         // }
@@ -236,8 +234,6 @@ $(document).bind( "pagebeforechange", function( e, data ) {
                 /^.*category=(\w+)$/)[1] : null,
             fnList = (category in addFunctionList) ? addFunctionList
                 : showFunctionList;
-
-        console.log(testData);
         
         if ( u.hash.search( backP ) !== -1 ) {
             // clicked on a branch
@@ -249,23 +245,21 @@ $(document).bind( "pagebeforechange", function( e, data ) {
                 fnList === addFunctionList ? addRemoveList(u,
                                                            data.options,
                                                           category,
-                                                           testData.branches[branchName].items,
+                                                           clientData.branches[branchName].items,
                                                            fnList,
                                                            branchName) :
                     showCategory(u, data.options, category,
-                                 testData.branches[branchName].items, fnList,
+                                 clientData.branches[branchName].items, fnList,
                                  branchName);
 
                 e.preventDefault();
             // top level menu
             } else {
                 showCategory(u, data.options, category,
-                             testData.items, fnList,  null); // <--- create separate
+                             clientData.items, fnList,  null); // <--- create separate
                 // variable for testData.items                
                 e.preventDefault();
             }
         }
     }
 });
-
-

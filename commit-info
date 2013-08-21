@@ -1,5 +1,6 @@
-Data now loaded via AJAX (jQuery .getJSON method)
+Changed variable name testData -> clientData.
+
+Removed console.log expressions.
 
 TO DO:
-[X] JSON remote loading
 [ ] Add reports view
