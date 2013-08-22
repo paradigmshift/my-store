@@ -1,5 +1,6 @@
 var clientData;
 
+// get client data from database
 $.getJSON("http://localhost:5000?callback=?", function(data) {
     clientData = data; });
 
@@ -114,12 +115,12 @@ var addFunctionList = {
     "addInventory": populateItemList
 };
 
-function populateItemList (itemData, markup, branchName) {
+// markup parameter not needed but leaving it in to prevent adding unnecessary changes to categoryMatcher and categoryFN
+function populateItemList (itemData, markup) {
     itemList.length = 0;
     for (item in itemData) {
         itemList.push(itemData[item].name);
     }
-    return markup;
 };
 
 function saleForm (name, price) {

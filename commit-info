@@ -1,6 +1,6 @@
-Changed variable name testData -> clientData.
+Added DOCS.md and changed README.md
 
-Removed console.log expressions.
+Slight refactoring of my-store.js
 
 TO DO:
 [ ] Add reports view
