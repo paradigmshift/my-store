@@ -1,4 +1,4 @@
-var clientData;
+var clientData; // toplevel container for client data
 
 // get client data from database
 $.getJSON("http://localhost:5000?callback=?", function(data) {
@@ -9,8 +9,6 @@ var showFunctionList = {
     "Inventory": showInventory,
     "Branches": showBranch
 };
-
-var itemList = []; // list of items for autocomplete feature
 
 function categoryMatcher (categoryData, itemData, markup, fnList, branchName) {
     var fn = fnList[categoryData];
@@ -25,8 +23,6 @@ function categoryFn (fn, categoryData, itemData, markup, branchName) {
     return branchName ? fn.call(this, itemData,  markup, branchName) :
         fn.call(this, itemData, markup);
 };
-
-
 
 function showSales (itemData, markup) {
     for (item in itemData) {
@@ -61,6 +57,7 @@ function showBranch (markup) {
     return markup;
 };
 
+// page for branch views (add and view sales and inventory)
 function branchMenu (branchName) {
     return "<h2>Select a Category Below:</h2>" +
         "<ul data-role='listview' data-inset='true'>" +
@@ -78,6 +75,7 @@ function branchMenu (branchName) {
     "</ul>";
 }
 
+// creates page for view sales, inventory, or branches
 function showCategory( urlObj, options, category, itemData,
                        fnList, branchName )
 {
@@ -114,6 +112,8 @@ var addFunctionList = {
     "addSale": populateItemList,
     "addInventory": populateItemList
 };
+
+var itemList = []; // list of items for autocomplete feature
 
 // markup parameter not needed but leaving it in to prevent adding unnecessary changes to categoryMatcher and categoryFN
 function populateItemList (itemData, markup) {
@@ -154,7 +154,8 @@ function reverseSearch (value, key, itemData) {
     };
 }
 
-function acSearch(selector, ...theArgs) { // wrapper for autocomplete method
+// wrapper for autocomplete method
+function acSearch(selector, ...theArgs) { 
     var codeString = "jQuery('" + selector + "').autocomplete({";
     
     theArgs.map(function (arg) {
@@ -192,6 +193,7 @@ function addInventoryAc () {
                     + " $('#inventorySearchField').autocomplete('clear');}");
 }
 
+// creates page for either add sales or add inventory
 function addRemoveList( urlObj, options, category, itemData,
                        fnList, branchName )
 {
@@ -243,12 +245,9 @@ $(document).bind( "pagebeforechange", function( e, data ) {
                 var branchName = u.hash.match( /^.*branch=(\w+)[?]*/
                                              )[1].toLowerCase();
 
-                fnList === addFunctionList ? addRemoveList(u,
-                                                           data.options,
-                                                          category,
+                fnList === addFunctionList ? addRemoveList(u, data.options, category,
                                                            clientData.branches[branchName].items,
-                                                           fnList,
-                                                           branchName) :
+                                                           fnList, branchName) :
                     showCategory(u, data.options, category,
                                  clientData.branches[branchName].items, fnList,
                                  branchName);
@@ -257,8 +256,7 @@ $(document).bind( "pagebeforechange", function( e, data ) {
             // top level menu
             } else {
                 showCategory(u, data.options, category,
-                             clientData.items, fnList,  null); // <--- create separate
-                // variable for testData.items                
+                             clientData.items, fnList,  null);
                 e.preventDefault();
             }
         }
