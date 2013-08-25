@@ -1,4 +1,5 @@
-Added some comments and re-arranged functions
+DOCS.md beautification.
 
 TO DO:
+[ ] Add login and reload database functions
 [ ] Add reports view
