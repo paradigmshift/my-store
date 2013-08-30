@@ -1,8 +1,10 @@
-var clientData; // toplevel container for client data
+var clientData = {}; // toplevel container for client data
 
-// get client data from database
-$.getJSON("http://localhost:5000?callback=?", function(data) {
-    clientData = data; });
+function getClientData () {
+    $.getJSON("http://localhost:5000?callback=?", function(data) {
+        clientData = data;
+    });
+}
 
 var showFunctionList = {
     "Sales": showSales,
@@ -89,7 +91,7 @@ function showCategory( urlObj, options, category, itemData,
             markup = "<ul data-role='listview' data-inset='true'>";
 
         // clicked on sales, inventory, or branches (top level or
-        // branch item view)
+        // branch level view)
         if (category in fnList) {
             markup += categoryMatcher(category, itemData, markup,
                                       fnList, branchName);
@@ -226,14 +228,18 @@ function addRemoveList( urlObj, options, category, itemData,
 }
 
 $(document).bind( "pagebeforechange", function( e, data ) {
+    // refresh database
+    $("#refresh").click(function () {
+        getClientData();
+    });
 
     if ( typeof data.toPage === "string" ) {
 	    var u = $.mobile.path.parseUrl( data.toPage ),
             backP = /.*=/,
             branchP = /branch?/,
-            categoryP = /category?/;
-
-        var category = u.hash.search(categoryP) !== -1 ? u.hash.match(
+            categoryP = /category?/,
+            // if category is set to null showCategory will call branchMenu
+            category = u.hash.search(categoryP) !== -1 ? u.hash.match( 
                 /^.*category=(\w+)$/)[1] : null,
             fnList = (category in addFunctionList) ? addFunctionList
                 : showFunctionList;
@@ -262,3 +268,4 @@ $(document).bind( "pagebeforechange", function( e, data ) {
         }
     }
 });
+
