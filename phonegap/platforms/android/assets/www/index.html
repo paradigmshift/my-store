@@ -1,0 +1,122 @@
+<!DOC-TYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>myStore Sample</title>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+    <link rel="stylesheet" href="my-store.css" />
+	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="jqm.autoComplete-1.5.2-min.js"></script>    
+	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+    <script src="my-store.js"></script>
+
+</head>
+
+<body>
+<div id="home" data-role="page">
+  <div data-role="header">
+    <a href="#login" data-rel="dialog">Log In</a>
+    <h1>Categories</h1>
+    <a href="#refresh" id="refresh" data-icon="refresh">Refresh Data</a> 
+  </div>
+  <div data-role="content">
+  	<h2>Select a Category Below:</h2>
+  	<ul data-role="listview" data-inset="true">
+    	<li><a href="#category-items?category=Sales">Sales</a></li>
+    	<li><a href="#category-items?category=Inventory">Inventory</a></li>
+    	<li><a href="#category-items?category=Branches">Branches</a></li>
+    </ul>
+  </div>
+</div>
+
+<div id="login" data-role="page">
+  <div data-role="header"><h1></h1></div>
+  <div data-role="content">
+    <form>
+      <div data-role="fieldcontain">
+        <label for="userName">User Name </label>
+        <input type="text" id="userName" placeholder="User Name" />
+      </div>
+      <div data-role="fieldcontain">
+        <label for="password">Password </label>
+        <input type="text" id="password" placeholder="Password" />
+      </div>
+      <button class="ui-btn-hidden" value="submit-value"
+              name="submit" type="submit"> Submit </button>
+    </form>
+  </div>
+</div>
+
+<div id="category-items" data-role="page" data-add-back-btn="true">
+  <div data-role="header"><h1></h1></div>
+  <div data-role="content"></div>
+</div>
+
+<div id="branch-items" data-role="page" data-add-back-btn="true">
+  <div data-role="header"><h1></h1></div>
+  <div data-role="content"></div>
+</div>
+
+<div id="add-sale" data-role="page" data-add-back-btn="true">
+  <div data-role="header"><h1></h1></div>
+  <div data-role="content">
+    <!-- <div data-role="fieldcontain" id="customerName"></div> -->
+    <div data-role="fieldcontain"> 
+      <label for="saleSearchField">Enter Item </label> 
+      <input type="text" id="saleSearchField" placeholder="Spaghetti, Olive oil, etc." /> 
+      <ul data-role="listview" data-inset="true" id="saleSuggestions"></ul> 
+    </div>
+    <form method="get" action="">
+          <div data-role="fieldcontain" id="saleItemList"></div>
+          <button class="ui-btn-hidden" value="submit-value"
+          name="submit" type="submit"> Submit </button>
+    </form>
+  </div>
+</div>
+
+<div id="add-inventory" data-role="page" data-add-back-btn="true">
+  <div data-role="header"><h1></h1></div>
+  <div data-role="content">
+    <!-- <div data-role="fieldcontain" id="customerName"></div> -->
+    <div data-role="fieldcontain"> 
+      <label for="inventorySearchField">Enter Item </label> 
+      <input type="text" id="inventorySearchField" placeholder="Spaghetti, Olive oil, etc." /> 
+      <ul data-role="listview" data-inset="true" id="inventorySuggestions"></ul> 
+    </div>
+    <form method="get" action="">
+      <div data-role="fieldcontain" id="inventoryItemList"></div>
+      <button class="ui-btn-hidden" value="submit-value"
+              name="submit" type="submit"> Submit </button>
+    </form>
+    <div data-role="collapsible">
+      <h3>Add New Item</h3>
+      <form method="get" action="">
+        <div data-role="fieldcontain">
+          <label for="itemName">Item Name </label>
+          <input type="text" id="itemName" placeholder="Name" />
+        </div>
+        <div data-role="fieldcontain">
+          <label for="itemCode">Item Code </label>
+          <input type="text" id="itemCode" placeholder="Code" />
+        </div>
+        <div data-role="fieldcontain">
+          <label for="itemCost">Cost </label>
+          <input type="number" id="itemCost" placeholder="Cost" />
+        </div>
+        <div data-role="fieldcontain">
+          <label for="itemPrice">Price </label>
+          <input type="number" id="itemPrice" placeholder="Price" />
+        </div>
+        <div data-role="fieldcontain">
+          <label for="itemQty">Starting Quantity </label>
+          <input type="number" id="itemQty" placeholder="Quantity" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
