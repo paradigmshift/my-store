@@ -55,6 +55,52 @@ var phoneGapTestData = {
                     "sold": 43,
                     "inventory": 3
                 }
+            },
+            sales: {
+                0001: {
+                    "items": {
+                        spaghetti: {
+                            "name": "Spaghetti",
+                            "qty": 3
+                        },
+                        oliveOil: {
+                            "name": "Olive Oil",
+                            "qty": 1
+                        }
+                    }
+                },
+                0002: {
+                    "items": {
+                        tomatoPaste: {
+                            "name": "Tomate Paste",
+                            "qty": 8
+                        },
+                        oliveOil: {
+                            "name": "Olive Oil",
+                            "qty": 8
+                        },
+                        tomatoes: {
+                            "name": "Tomatoes",
+                            "qty": 45
+                        }
+                    }
+                },
+                0003: {
+                    "items": {
+                        oliveOil: {
+                            "name": "Olive Oil",
+                            "qty": 1
+                        }
+                    }
+                },
+                0004: {
+                    "items": {
+                        oliveOil: {
+                            "name": "Olive Oil",
+                            "qty": 37
+                        }
+                    }
+                }
             }
         },
         manila: {
