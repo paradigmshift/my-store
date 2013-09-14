@@ -1,7 +1,10 @@
 from bottle import *
 
-with open('ajaxtest.js', 'r') as f:
-    test_data = f.read()
+with open('clientData.js', 'r') as f:
+    client_data = f.read()
+
+with open('receipts.js', 'r') as f:
+    receipts = f.read()
 
 def jsonp(request, dictionary):
     if (request.query.callback):
@@ -10,6 +13,10 @@ def jsonp(request, dictionary):
 
 @get('/')
 def something():
-    return jsonp(request, test_data)
+    return jsonp(request, client_data)
+
+@route('/receipt/:id')
+def something(id):
+    return jsonp(request, receipts)
 
 run(host='localhost', port=5000)

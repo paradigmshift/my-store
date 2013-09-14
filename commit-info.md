@@ -1,11 +1,6 @@
-Hardcoded test data into my-store.js, `getClientData` loads
-data from variable instead of from a remote server (demo purposes
-only).
+Profit view added.
 
-Changed acSearch parameters to use `arguments` instead of
-`...theArgs` (experimental feature, only works with FF). Changed
-relevant call in `addRemoveList`.
+Receipt view added.
 
 TO DO:
-[ ] Resolve speed issue between phonegap and jqm
-[ ] Add reports view?
+[ ] Fix client data calls (waiting for back-end specs)
