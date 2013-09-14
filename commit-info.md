@@ -1,6 +1,4 @@
-Profit view added.
-
-Receipt view added.
+Minor refactoring
 
 TO DO:
 [ ] Fix client data calls (waiting for back-end specs)

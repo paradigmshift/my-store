@@ -1,29 +1,57 @@
+clientData = {};
+
 var phoneGapTestData = {
     items: {
         spaghetti: {
             "name": "Spaghetti",
             "price": 20,
+            "cost": 10,
             "sold": 154,
-            "inventory": 360
+            "inventory": 360,
         },
         tomatoes: {
             "name": "Tomatoes",
             "price": 30,
+            "cost": 25,
             "sold": 252,
             "inventory": 343
         },
         oliveOil: {
             "name": "Olive Oil",
             "price": 34.5,
+            "cost": 18,
             "sold": 230,
             "inventory": 39
         },
         tomatoPaste: {
             "name": "Tomato Paste",
             "price":45.4,
+            "cost": 30,
             "sold": 103,
             "inventory": 32
+        },
+        chianti: {
+            "name": "Chianti",
+            "price": 670,
+            "cost": 430,
+            "sold": 132,
+            "inventory": 243
+        },
+        merlot: {
+            "name": "Merlot",
+            "price": 590,
+            "cost": 255,
+            "sold": 249,
+            "inventory": 14
+        },
+        moet: {
+            "name": "Moet & Chandon",
+            "price": 1900,
+            "cost": 1090.5,
+            "sold": 46,
+            "inventory": 90
         }
+        
     },
     branches: {
         cebu: {
@@ -52,53 +80,19 @@ var phoneGapTestData = {
                     "price":45.4,
                     "sold": 43,
                     "inventory": 3
+                },
+                moet: {
+                    "name": "Moet & Chandon",
+                    "price": 1700,
+                    "sold": 15,
+                    "inventory": 34
                 }
             },
             sales: {
-                0001: {
-                    "items": {
-                        spaghetti: {
-                            "name": "Spaghetti",
-                            "qty": 3
-                        },
-                        oliveOil: {
-                            "name": "Olive Oil",
-                            "qty": 1
-                        }
-                    }
-                },
-                0002: {
-                    "items": {
-                        tomatoPaste: {
-                            "name": "Tomate Paste",
-                            "qty": 8
-                        },
-                        oliveOil: {
-                            "name": "Olive Oil",
-                            "qty": 8
-                        },
-                        tomatoes: {
-                            "name": "Tomatoes",
-                            "qty": 45
-                        }
-                    }
-                },
-                0003: {
-                    "items": {
-                        oliveOil: {
-                            "name": "Olive Oil",
-                            "qty": 1
-                        }
-                    }
-                },
-                0004: {
-                    "items": {
-                        oliveOil: {
-                            "name": "Olive Oil",
-                            "qty": 37
-                        }
-                    }
-                }
+                "q0001": "2013/09/01",
+                "q0002": "2013/08/25",
+                "q0003": "2013/08/22",
+                "q0004": "2013/08/22",
             }
         },
         manila: {
@@ -128,6 +122,10 @@ var phoneGapTestData = {
                     "sold": 36,
                     "inventory": 5
                 }
+            },
+            sales: {
+                "q0005": "2013/08/29",
+                "q0006": "2013/09/13"
             }
         },
         boracay: {
@@ -157,13 +155,17 @@ var phoneGapTestData = {
                     "sold": 23,
                     "inventory": 10
                 }
+            },
+            sales: {
+                "q0007": "2013/09/06",
+                "q0008": "2013/09/10"
             }
         }
     }
 };
 
-var receipts = {
-        q0001: {
+var phoneGapTestReceipts = {
+    q0001: {
         "rnumber": "q0001",
         "items": {
             spaghetti: {
@@ -298,6 +300,8 @@ var receipts = {
     }
 };
 
+var receipts = {};
+
 function getClientData () {
     // $.getJSON("http://localhost:5000?callback=?", function(data) {
     //     clientData = data;
@@ -306,11 +310,12 @@ function getClientData () {
 }
 
 function getReceipts (receiptNumber) {
-    var query = "http://localhost:5000/receipt/" + receiptNumber +
-            "?callback=?";
-    $.getJSON(query, function(data) {
-        receipts = data;
-    });
+    // var query = "http://localhost:5000/receipt/" + receiptNumber +
+    //         "?callback=?";
+    // $.getJSON(query, function(data) {
+    //     receipts = data;
+    // });
+    receipts = phoneGapTestReceipts;
 }
 
 var showFunctionList = {
@@ -363,7 +368,7 @@ function showSales (itemData, markup, branchName) {
 
 function showInventory (itemData, markup) {
     markup +='<ul data-role="listview" data-inset="true" >';
-    for (item in clientData.items) {
+    for (item in itemData) {
         markup += "<li>" + '<div'
             + ' class="ui-grid-a"> <span class = "ui-block-a">' +
             itemData[item].name + '</span><span class = "ui-block-b" style="text-align:right">'
@@ -376,7 +381,7 @@ function showInventory (itemData, markup) {
 
 function showProfits (itemData, markup) {
     markup +='<ul data-role="listview" data-inset="true" data-filter="true">';
-    var items = clientData.items;
+    var items = itemData;
     for (item in items) {
         markup += "<li><div class='ui-grid-a'><span"
             + " class='ui-block-a'> Item: " + items[item].name +
