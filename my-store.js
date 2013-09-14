@@ -1,15 +1,26 @@
 var clientData = {}; // toplevel container for client data
 
+var receipts = {};
+
 function getClientData () {
     $.getJSON("http://localhost:5000?callback=?", function(data) {
         clientData = data;
     });
 }
 
+function getReceipts (receiptNumber) {
+    var query = "http://localhost:5000/receipt/" + receiptNumber +
+            "?callback=?";
+    $.getJSON(query, function(data) {
+        receipts = data;
+    });
+}
+
 var showFunctionList = {
     "Sales": showSales,
     "Inventory": showInventory,
-    "Branches": showBranch
+    "Branches": showBranch,
+    "Profits": showProfits
 };
 
 function categoryMatcher (categoryData, itemData, markup, fnList, branchName) {
@@ -23,10 +34,23 @@ function categoryFn (fn, categoryData, itemData, markup, branchName) {
         return fn.call(this, markup);
     } 
     return branchName ? fn.call(this, itemData,  markup, branchName) :
-        fn.call(this, itemData, markup);
+        fn.call(this, itemData, markup, branchName);
 };
 
-function showSales (itemData, markup) {
+function showSales (itemData, markup, branchName) {
+    markup +='<ul data-role="listview" data-inset="true" >';
+    if (branchName) {
+        for (r in clientData.branches[branchName].sales) {
+            var receipt = receipts[r];
+            markup += "<li data-icon='search'><a "
+                + " href=#receipt?number="+ receipt.rnumber
+                +" ><div class='ui-grid-a'><span"
+                + " class='ui-block-a'>" + "Receipt: " +
+                receipt.rnumber + "</span><span class='ui-block-b'"
+                + " style='text-align:right'>"+ "Amount: " +
+                receipt.sales + "</span></div></a></li>";
+        }
+    }
     for (item in itemData) {
         markup += "<li>" + '<div class="ui-grid-b">'
             + "<span class='ui-block-a'>" + itemData[item].name +
@@ -36,10 +60,12 @@ function showSales (itemData, markup) {
             "<span class='ui-li-count'>" +itemData[item].price *
             itemData[item].sold + "</span></span></div></li>";
     }
+    markup += "</ul>";
     return markup;
 };
 
 function showInventory (itemData, markup) {
+    markup +='<ul data-role="listview" data-inset="true" >';
     for (item in clientData.items) {
         markup += "<li>" + '<div'
             + ' class="ui-grid-a"> <span class = "ui-block-a">' +
@@ -47,15 +73,31 @@ function showInventory (itemData, markup) {
             + "Units left: " + "<span class = 'ui-li-count'>" +
             itemData[item].inventory + "</span> "+"</span>" + "</div></li>";
     }
+    markup += "</ul>";
+    return markup;
+};
+
+function showProfits (itemData, markup) {
+    markup +='<ul data-role="listview" data-inset="true" data-filter="true">';
+    var items = clientData.items;
+    for (item in items) {
+        markup += "<li><div class='ui-grid-a'><span"
+            + " class='ui-block-a'> Item: " + items[item].name +
+        "</span><span class='ui-grid-b'> Profit: " + (((items[item].price
+            / items[item].cost) * 100) - 100).toFixed(2) + "% </span></div></li>";
+    }
+    markup += "</ul>";
     return markup;
 };
 
 function showBranch (markup) {
+    markup +='<ul data-role="listview" data-inset="true" >';
     for (branch in clientData.branches) {
         markup += "<li>" + '<a href="#branch-items?branch=' +
         clientData.branches[branch].name + '">' +
             clientData.branches[branch].name + "</a>" +"</li>";
     }
+    markup += "</ul>";
     return markup;
 };
 
@@ -83,24 +125,19 @@ function showCategory( urlObj, options, category, itemData,
 {
     var categoryName = urlObj.hash.replace( /.*=/, "" ),
 	    pageSelector = urlObj.hash.replace( /\?.*$/, "" );
-
     if ( categoryName ) {
 	    var $page = $( pageSelector ),
 		    $header = $page.children( ":jqmData(role=header)" ),
 		    $content = $page.children( ":jqmData(role=content)" ),
-            markup = "<ul data-role='listview' data-inset='true'>";
-
+            markup='';
         // clicked on sales, inventory, or branches (top level or
         // branch level view)
         if (category in fnList) {
             markup += categoryMatcher(category, itemData, markup,
                                       fnList, branchName);
-            markup += "</ul>";
-
         } else { 
             markup = branchMenu (categoryName);
         }
-        
         $header.find( "h1" ).html( categoryName );
 	    $content.html( markup );
         $page.page();
@@ -159,11 +196,9 @@ function reverseSearch (value, key, itemData) {
 // wrapper for autocomplete method
 function acSearch(selector, ...theArgs) { 
     var codeString = "jQuery('" + selector + "').autocomplete({";
-    
     theArgs.map(function (arg) {
         codeString += arg;
     });
-    
     codeString += "})";
     return codeString;
 }
@@ -227,17 +262,66 @@ function addRemoveList( urlObj, options, category, itemData,
     }
 }
 
+function buildReceipt( receiptNumber, markup ) {
+    var receipt = receipts[receiptNumber];
+    markup += '<p>Receipt Number: ' + receiptNumber;
+    markup += '<ul data-role="listview">';
+    for (item in receipt.items ) {
+        markup += '<li><div class="ui-grid-a"><span class="ui-block-a">Item: ' + receipt.items[item].name + ' x ' +
+            receipt.items[item].qty + '</span><span'
+            + ' class="ui-block-b" style="text-align:right">'+' Amount: ' +
+            receipt.items[item].total + '</span></div>';
+    }
+    markup += '<li style="text-align:right">Total: ' + receipt.sales + '</li></ul>';
+    return markup;
+}
+
+function showReceipt( urlObj, options, receiptNumber) {
+    var pageSelector = urlObj.hash.replace( /\?.*$/, ""),
+        $page = $( pageSelector),
+        $header = $page.children( ":jqmData(role=header)" ),
+		$content = $page.children( ":jqmData(role=content)" ),
+        markup='';
+    markup += buildReceipt( receiptNumber, markup );
+    $header.find( "h1").html( receiptNumber);
+    $content.html( markup );
+    $page.page();
+    $content.find( ":jqmData(role=listview)" ).listview();
+    options.dataUrl = urlObj.href;
+    $.mobile.changePage( $page, options);
+}
+
+// function receiptDialog( receiptNumber, markup ) {
+//     markup = '<div id="receipt" data-role="dialog"'
+//         + ' data-add-back-btn="true">' +
+//         '<div data-role="header"><h1>' + receiptNumber + '</h1></div>'
+//         + ' <div data-role="content">' + buildReceipt( receiptNumber )
+//         + '</div></div>';
+//     return markup;
+// }
+
+
+
 $(document).bind( "pagebeforechange", function( e, data ) {
     // refresh database
     $("#refresh").click(function () {
         getClientData();
+        getReceipts(1); // <--- fix async calls
     });
+
+    // $("#receipt").on("pagehide", function() {
+    //     var that = $( this );
+    //     $content = that.children(":jqmData(role=content)");
+    //     $content.empty();
+    //     $(that).remove();
+    // });
 
     if ( typeof data.toPage === "string" ) {
 	    var u = $.mobile.path.parseUrl( data.toPage ),
             backP = /.*=/,
             branchP = /branch?/,
             categoryP = /category?/,
+            receiptP = /receipt?/,
             // if category is set to null showCategory will call branchMenu
             category = u.hash.search(categoryP) !== -1 ? u.hash.match( 
                 /^.*category=(\w+)$/)[1] : null,
@@ -245,8 +329,16 @@ $(document).bind( "pagebeforechange", function( e, data ) {
                 : showFunctionList;
         
         if ( u.hash.search( backP ) !== -1 ) {
+            // clicked on a receipt
+            if ( u.hash.search( receiptP ) !== -1 ){
+                var receiptNumber = u.hash.match(
+                        /^.*number=(.*)$/)[1];
+                // getReceipts(receiptNumber);
+                showReceipt(u, data.options, receiptNumber);
+                e.preventDefault();
+            }
             // clicked on a branch
-            if (u.hash.search( branchP ) !== -1) {
+            else if (u.hash.search( branchP ) !== -1) {
 
                 var branchName = u.hash.match( /^.*branch=(\w+)[?]*/
                                              )[1].toLowerCase();
@@ -268,4 +360,3 @@ $(document).bind( "pagebeforechange", function( e, data ) {
         }
     }
 });
-
